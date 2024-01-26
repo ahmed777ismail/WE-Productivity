@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --old: #cf6a87;
+            --purple: #800080;
+            --darkpurple: #4c004c;
+            --green: #4CAF50;
+            --dark_green: #45a049;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        header {
+            background-color: var(--purple);
+            padding: 20px 0;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            color: white;
+        }
+
+        main {
+            margin: 20px;
+            background-color: var(--purple);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            justify-items: center;
+        }
+
+
+        label {
+            color: #f4f4f4;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px;
+            background-color: var(--darkpurple);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 18px;
+            background-color: #b266b2;
+
+        }
+
+        button:hover {
+            background-color: var(--darkpurple);
+        }
+
+        h4 {
+            margin-top: 20px;
+            color: aliceblue;
+            text-align: center;
+            font-weight: bolder;
+        }
+
+        .notes {
+            color: white;
+            margin: 20px;
+            padding: 20px;
+            background-color: var(--purple);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .notes h4 {
+            font-size: 20px;
+        }
+
+        .notes p {
+            margin-bottom: 10px;
+        }
+
+        .notes span {
+            font-weight: bold;
+        }
+
+        @media only screen and (max-width: 500px) {
+            form {
+                display: flex;
+                flex-direction: column;
+				justify-content: center;
+				align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="center">
+        <h1>Productivity Calculator</h1>
+    </header>
+
+    <main>
+        <form onsubmit="calculateProductivity(); return false;">
+            <div>
+                <label for="ticketCount">Count of Tickets</label>
+                <input id="ticketCount" type="text" placeholder="Tickets Count" required>
+            </div>
+
+            <div>
+                <label for="workingHours">Working Hours</label>
+                <input id="workingHours" type="text" placeholder="EX: 07:45:00" required>
+            </div>
+
+            <div><button type="reset">Reset</button></div>
+            <div>
+                <button type="submit">Calculate</button>
+            </div>
+        </form>
+
+        <div>
+            <h4><span id="productivityResult"></span></h4>
+        </div>
+    </main>
+
+    <section class="notes">
+        <h4>Notes</h4>
+		<p><span>Count of tickets:</span> Novomind → House icon → Today → Calculate ( Answered + W/O reply )</p>
+        <p><span>Working hours:</span> Total shift - ( Breaks, EC, Connectivity codes… ETC ) + ( EC, Connectivity
+            covering… ETC )</p>
+    </section>
+
+
+
+
+    <script>
+        function calculateProductivity() {
+            // Get values as numbers
+            let ticketCount = parseFloat(document.getElementById('ticketCount').value);
+            let workingHoursInput = document.getElementById('workingHours').value;
+
+            // Check if the conversion was successful
+            if (isNaN(ticketCount) || !isValidTime(workingHoursInput)) {
+                alert("Please enter valid numeric values for ticket count and working hours in the format HH:mm:ss.");
+                return;
+            }
+
+            // Given values
+            let standardAHTMinutes = 8;
+            let standardAHTSeconds = 50;
+            let standardAHT = standardAHTMinutes + standardAHTSeconds / 60; // Convert standard AHT to minutes
+
+            // Convert working hours to minutes
+            let workingHours = convertTimeToMinutes(workingHoursInput);
+
+            // Perform the calculation
+            let totalMinutes = ticketCount * standardAHT;
+            let productivity = (totalMinutes / workingHours) * 100;
+
+            // Display the result
+            let result = document.getElementById('productivityResult');
+            result.innerText = `Your Productivity is (${productivity.toFixed(1)}%)`;
+        }
+
+        function isValidTime(timeString) {
+            // Validate time string format (HH:mm:ss)
+            const regex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+            return regex.test(timeString);
+        }
+
+        function convertTimeToMinutes(timeString) {
+            // Convert time string to total minutes
+            const [hours, minutes, seconds] = timeString.split(':').map(Number);
+            return hours * 60 + minutes + seconds / 60;
+        }
+
+    </script>
+
+</body>
+
+</html>
